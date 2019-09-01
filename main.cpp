@@ -94,22 +94,22 @@ int main(int argc, char* argv[]){
 		}
 		
 		if(Keyboard::isKeyPressed(Keyboard::Up)){
-			if(p1.posY != DOWN){
+			if(p1.direction != DOWN){
 				p1.direction = UP;
 			}
 		}
 		if(Keyboard::isKeyPressed(Keyboard::Down)){
-			if(p1.posY != UP){
+			if(p1.direction != UP){
 				p1.direction = DOWN;
 			}
 		}
 		if(Keyboard::isKeyPressed(Keyboard::Left)){
-			if(p1.posY != RIGHT){
+			if(p1.direction != RIGHT){
 				p1.direction = LEFT;
 			}
 		}
 		if(Keyboard::isKeyPressed(Keyboard::Right)){
-			if(p1.posY != LEFT){
+			if(p1.direction != LEFT){
 				p1.direction = RIGHT;
 			}
 		}
