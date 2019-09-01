@@ -6,10 +6,15 @@
 #define DOWN 2
 #define LEFT 3
 
+#define USED 1
+#define NOTUSED 0
+
 using namespace sf;
 
 const int WIDTH=600;
 const int HEIGHT=480;
+int speed = 4;
+bool field[WIDTH][HEIGHT] = {0};
 
 class Player{
 public:
@@ -40,16 +45,16 @@ public:
 			posX-=1;
 		}
 		
-		if(posX > WIDTH){
+		if(posX >= WIDTH){
 			posX = 0;
 		}
-		if(posX < WIDTH){
+		if(posX < 0){
 			posX = WIDTH - 1;
 		}
-		if(posY > HEIGHT){
+		if(posY >= HEIGHT){
 			posY = 0;
 		}
-		if(posY < HEIGHT){
+		if(posY < 0){
 			posY = HEIGHT - 1;
 		}
 	}
@@ -70,6 +75,8 @@ int main(int argc, char* argv[]){
 	texture.loadFromFile("background.jpg");
 	Sprite sBackground(texture);
 	
+	Player p1(Color::Red);
+	
 	Sprite sprite;
 	RenderTexture t;
 	t.create(WIDTH, HEIGHT);
@@ -84,6 +91,17 @@ int main(int argc, char* argv[]){
 			if(e.type == Event::Closed){
 				window.close();
 			}
+		}
+		
+		for(int i=0; i<speed; i++){
+			p1.tick();
+			field[p1.posX][p1.posY] = USED; 
+
+			CircleShape c(3);
+			c.setPosition(p1.posX,p1.posY);
+			c.setFillColor(p1.color);
+			t.draw(c);
+			t.display();    
 		}
 		
 		window.clear();
