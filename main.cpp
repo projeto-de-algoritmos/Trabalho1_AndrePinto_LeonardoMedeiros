@@ -85,6 +85,8 @@ int main(int argc, char* argv[]){
 	t.clear();
 	t.draw(sBackground);
 	
+	bool isPlaying = true;
+	
 	while(window.isOpen()){
 		Event e;
 		while(window.pollEvent(e)){
@@ -114,10 +116,19 @@ int main(int argc, char* argv[]){
 			}
 		}
 		
+		if(!isPlaying){
+			continue;
+		}
+		
 		for(int i=0; i<speed; i++){
 			p1.tick();
-			field[p1.posX][p1.posY] = USED; 
+			
+			if(field[p1.posX][p1.posY] == USED){
+				isPlaying = false;
+			}
 
+			field[p1.posX][p1.posY] = USED; 
+			
 			CircleShape c(3);
 			c.setPosition(p1.posX,p1.posY);
 			c.setFillColor(p1.color);
