@@ -32,13 +32,13 @@ public:
 	}
 	
 	void tick(){
-		if(direction == UP){
+		if(direction == DOWN){
 			posY+=1;
 		}
 		if(direction == RIGHT){
 			posX+=1;
 		}
-		if(direction == DOWN){
+		if(direction == UP){
 			posY-=1;
 		}
 		if(direction == LEFT){
@@ -90,6 +90,27 @@ int main(int argc, char* argv[]){
 		while(window.pollEvent(e)){
 			if(e.type == Event::Closed){
 				window.close();
+			}
+		}
+		
+		if(Keyboard::isKeyPressed(Keyboard::Up)){
+			if(p1.posY != DOWN){
+				p1.direction = UP;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::Down)){
+			if(p1.posY != UP){
+				p1.direction = DOWN;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::Left)){
+			if(p1.posY != RIGHT){
+				p1.direction = LEFT;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::Right)){
+			if(p1.posY != LEFT){
+				p1.direction = RIGHT;
 			}
 		}
 		
