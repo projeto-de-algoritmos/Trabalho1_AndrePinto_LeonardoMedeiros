@@ -75,7 +75,8 @@ int main(int argc, char* argv[]){
 	texture.loadFromFile("background.jpg");
 	Sprite sBackground(texture);
 	
-	Player p1(Color::Red);
+	Player p1(Color(231, 84, 128)); // PINK
+	Player p2(Color(0, 0, 255)); // BLUE
 	
 	Sprite sprite;
 	RenderTexture t;
@@ -116,22 +117,51 @@ int main(int argc, char* argv[]){
 			}
 		}
 		
+		if(Keyboard::isKeyPressed(Keyboard::W)){
+			if(p2.direction != DOWN){
+				p2.direction = UP;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::S)){
+			if(p2.direction != UP){
+				p2.direction = DOWN;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::A)){
+			if(p2.direction != RIGHT){
+				p2.direction = LEFT;
+			}
+		}
+		if(Keyboard::isKeyPressed(Keyboard::D)){
+			if(p2.direction != LEFT){
+				p2.direction = RIGHT;
+			}
+		}
+		
 		if(!isPlaying){
 			continue;
 		}
 		
 		for(int i=0; i<speed; i++){
 			p1.tick();
+			p2.tick();
 			
 			if(field[p1.posX][p1.posY] == USED){
 				isPlaying = false;
 			}
+			if(field[p2.posX][p2.posY] == USED){
+				isPlaying = false;
+			}
 
-			field[p1.posX][p1.posY] = USED; 
+			field[p1.posX][p1.posY] = USED;
+			field[p2.posX][p2.posY] = USED;
 			
 			CircleShape c(3);
 			c.setPosition(p1.posX,p1.posY);
 			c.setFillColor(p1.color);
+			t.draw(c);
+			c.setPosition(p2.posX,p2.posY);
+			c.setFillColor(p2.color);
 			t.draw(c);
 			t.display();    
 		}
