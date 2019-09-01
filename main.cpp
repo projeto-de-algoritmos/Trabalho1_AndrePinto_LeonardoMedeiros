@@ -13,7 +13,7 @@ using namespace sf;
 
 const int WIDTH=600;
 const int HEIGHT=480;
-int speed = 4;
+int speed = 1;
 bool field[WIDTH][HEIGHT] = {0};
 
 class Player{
@@ -64,6 +64,95 @@ public:
 	}
 };
 
+class Bot : public Player{
+public:
+	Bot(Color c) : Player(c){
+		color = c;
+	}
+
+	void tick(){
+		int verif;
+		if(direction == DOWN){
+			verif = posY+1;
+			if(posY+1 >= HEIGHT){
+				verif = 0;
+			}
+			if(field[posX][verif] == 0){			
+				posY+=1;
+			}
+			else{
+				direction = RIGHT;
+				tick();
+				return;
+			}
+		}
+		if(direction == RIGHT){
+			verif = posX+1;
+			if(posX+1 >= WIDTH){
+				verif = 0;
+			}
+			if(field[verif][posY] == 0){			
+				posX+=1;
+			}
+			else{
+				direction = UP;
+				tick();
+				return;
+			}
+		}
+		if(direction == UP){
+			verif = posY-1;
+			if(posY-1 < 0){
+				verif = HEIGHT-1;
+			}
+			if(field[posX][verif] == 0){			
+				posY-=1;
+			}
+			else{
+				direction = LEFT;
+				tick();
+				return;
+			}
+		}
+		if(direction == LEFT){
+			if(field[posX-1 < 0 ? WIDTH-1 : posX-1][posY] == 0){
+				posX-=1;
+			}
+			else if(field[posX][posY+1 >= HEIGHT ? 0 : posY+1] == 0){
+				direction = DOWN;
+				tick();
+				return;
+			}
+			else if(field[posX+1 >= WIDTH ? 0 : posX+1][posY] == 0){
+				direction = RIGHT;
+				tick();
+				return;
+			}
+			else if(field[posX][posY-1 < 0 ? HEIGHT-1 : posY-1] == 0){
+				direction = UP;
+				tick();
+				return;
+			}
+			else{
+				posX-=1;
+			}
+		}
+		
+		if(posX >= WIDTH){
+			posX = 0;
+		}
+		if(posX < 0){
+			posX = WIDTH - 1;
+		}
+		if(posY >= HEIGHT){
+			posY = 0;
+		}
+		if(posY < 0){
+			posY = HEIGHT - 1;
+		}
+	}
+};
+
 int main(int argc, char* argv[]){
 	
 	srand(time(NULL));
@@ -77,6 +166,7 @@ int main(int argc, char* argv[]){
 	
 	Player p1(Color(231, 84, 128)); // PINK
 	Player p2(Color(0, 0, 255)); // BLUE
+	Bot bot(Color(50, 50, 50)); // GREY
 	
 	Sprite sprite;
 	RenderTexture t;
@@ -144,24 +234,29 @@ int main(int argc, char* argv[]){
 		
 		for(int i=0; i<speed; i++){
 			p1.tick();
-			p2.tick();
+			//p2.tick();
+			bot.tick();
 			
 			if(field[p1.posX][p1.posY] == USED){
 				isPlaying = false;
 			}
 			if(field[p2.posX][p2.posY] == USED){
-				isPlaying = false;
+				//isPlaying = false;
 			}
 
 			field[p1.posX][p1.posY] = USED;
 			field[p2.posX][p2.posY] = USED;
+			field[bot.posX][bot.posY] = USED;
 			
 			CircleShape c(3);
-			c.setPosition(p1.posX,p1.posY);
+			c.setPosition(p1.posX, p1.posY);
 			c.setFillColor(p1.color);
 			t.draw(c);
-			c.setPosition(p2.posX,p2.posY);
+			c.setPosition(p2.posX, p2.posY);
 			c.setFillColor(p2.color);
+			t.draw(c);
+			c.setPosition(bot.posX, bot.posY);
+			c.setFillColor(bot.color);
 			t.draw(c);
 			t.display();    
 		}
