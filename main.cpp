@@ -134,7 +134,8 @@ public:
 				return;
 			}
 			else{
-				posX-=1;
+				// Bot is dead here
+				// nothing to do
 			}
 		}
 		
@@ -234,14 +235,16 @@ int main(int argc, char* argv[]){
 		
 		for(int i=0; i<speed; i++){
 			p1.tick();
-			//p2.tick();
+			p2.tick();
 			bot.tick();
 			
 			if(field[p1.posX][p1.posY] == USED){
+				// Player 2 wins
 				isPlaying = false;
 			}
 			if(field[p2.posX][p2.posY] == USED){
-				//isPlaying = false;
+				// Player 1 wins
+				isPlaying = false;
 			}
 
 			field[p1.posX][p1.posY] = USED;
