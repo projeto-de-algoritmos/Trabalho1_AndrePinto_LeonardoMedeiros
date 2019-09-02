@@ -1,6 +1,7 @@
 #include <SFML/Graphics.hpp>
 #include <iostream>
 #include <time.h>
+#include <queue>
 
 #define UP 0
 #define RIGHT 1
@@ -164,6 +165,60 @@ public:
 	}
 };
 
+class Obstacle{
+public:
+	std::queue <std::pair <int, int>> obstacleQueue;
+
+	Obstacle(std::pair <int, int> p){
+		obstacleQueue.push(p);
+	}
+
+	std::pair <int, int> nextObs(){
+		std::pair <int, int> p;
+		p.first = -1;
+		p.second = -1;
+		try{
+			std::pair <int, int> obs = obstacleQueue.front();
+
+			while(!obstacleQueue.empty()){
+				if (field[obs.first][obs.second] == USED){
+					obstacleQueue.pop();
+					obs = obstacleQueue.front();
+				}
+				else{
+					obstacleQueue.pop();
+					break;
+				}
+			}
+
+			if (field[obs.first][obs.second] == NOTUSED){
+				field[obs.first][obs.second] = USED;
+
+				p.first = obs.first+1 >= WIDTH ? 0 : obs.first+1;
+				p.second = obs.second;
+				obstacleQueue.push(p); // x+1, y
+				p.first = obs.first-1 < 0 ? WIDTH-1 : obs.first-1;
+				p.second = obs.second;
+				obstacleQueue.push(p); // x-1, y
+				p.first = obs.first;
+				p.second = obs.second+1 >= HEIGHT ? 0 : obs.second+1;
+				obstacleQueue.push(p); // x, y+1
+				p.first = obs.first;
+				p.second = obs.second-1 < 0 ? HEIGHT-1 : obs.second-1;
+				obstacleQueue.push(p); // x, y-1
+
+				return obs;
+			}
+
+			return p;
+		}
+		catch(...){
+			return p;
+		}
+
+	}
+};
+
 int main(int argc, char* argv[]){
 
 	if(argc >= 2){
@@ -183,7 +238,7 @@ int main(int argc, char* argv[]){
 
 	srand(time(NULL));
 
-	RenderWindow window(VideoMode(WIDTH, HEIGHT), "Gira gira jequiti");
+	RenderWindow window(VideoMode(WIDTH, HEIGHT), "THE NORT");
 	auto desktop = VideoMode::getDesktopMode();
 	Vector2i v2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2);
 	window.setPosition(v2i);
@@ -211,6 +266,11 @@ int main(int argc, char* argv[]){
 	text.setPosition(WIDTH/2-80, 20);
 
 	bool isPlaying = true;
+
+	std::pair <int, int> p;
+	p.first = rand() % WIDTH;
+	p.second = rand() % HEIGHT;
+	Obstacle obs(p);
 
 	while(window.isOpen()){
 		Event e;
@@ -273,6 +333,16 @@ int main(int argc, char* argv[]){
 			p2.tick();
 			bot.tick();
 
+			auto obstacle = obs.nextObs();
+			CircleShape c(3);
+			if(obstacle.first >= 0 && obstacle.second >= 0 && obstacle.first < WIDTH && obstacle.second < HEIGHT){
+				field[obstacle.first][obstacle.second] = USED;
+
+				c.setPosition(obstacle.first, obstacle.second);
+				c.setFillColor(Color(50, 50, 50));
+				t.draw(c);
+			}
+
 			if(field[p1.posX][p1.posY] == USED){
 				// Player 2 wins
 				text.setFillColor(p2.color);
@@ -288,7 +358,6 @@ int main(int argc, char* argv[]){
 			field[p2.posX][p2.posY] = USED;
 			field[bot.posX][bot.posY] = USED;
 
-			CircleShape c(3);
 			c.setPosition(p1.posX, p1.posY);
 			c.setFillColor(p1.color);
 			t.draw(c);
