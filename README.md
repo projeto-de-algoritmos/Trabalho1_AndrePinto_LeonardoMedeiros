@@ -9,7 +9,9 @@ Leonardo de Araujo Medeiros - 17/0038891
 1. Faça o clone deste projeto com o comando ```$ git clone https://github.com/projeto-de-algoritmos/Trabalho1_AndrePinto_LeonardoMedeiros.git ```;
 2. Altere para a o diretório do projeto com o comando ```$ cd Trabalho1_AndrePinto_LeonardoMedeiros/```;
 3. Use o comando ```$ make``` para compilar o projeto;
-4. Use a o comando ```$ make run``` para executar a aplicação.
+4. Use a o comando ```$ make run speed=NUMERO``` para executar a aplicação. NUMERO deve ser um valor numérico de 1 a 20.
+
+OBS: caso não seja passada speed, ou nao seja um valor numérico de 1 a 20 o mesmo irá ter o valor de 4.
 
 ## Ideia proposta
 O jogo possui um grafo implicito, no qual cada ponto da matriz é um nó e cada uma de suas quatro direções é uma aresta, e o jogador que visitar um nó que já foi visitado é dado como derrotado.
