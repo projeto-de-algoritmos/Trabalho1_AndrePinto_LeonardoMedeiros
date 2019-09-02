@@ -66,11 +66,18 @@ public:
 
 class Bot : public Player{
 public:
+	int line;
 	Bot(Color c) : Player(c){
 		color = c;
+		line = 0;
 	}
 
 	void tick(){
+		if(posX>3 and posX<WIDTH-3 and posY>3 and posY<HEIGHT-3 and line >= 30){
+			direction=rand()%4;
+			line = 0;
+		}
+
 		int verif;
 		if(direction == DOWN){
 			verif = posY+1;
@@ -151,6 +158,8 @@ public:
 		if(posY < 0){
 			posY = HEIGHT - 1;
 		}
+		
+		line++;
 	}
 };
 
@@ -159,6 +168,9 @@ int main(int argc, char* argv[]){
 	srand(time(NULL));
 	
 	RenderWindow window(VideoMode(WIDTH, HEIGHT), "Gira gira jequiti");
+	auto desktop = VideoMode::getDesktopMode();
+	Vector2i v2i(desktop.width/2 - window.getSize().x/2, desktop.height/2 - window.getSize().y/2);
+	window.setPosition(v2i);
 	window.setFramerateLimit(60);
 	
 	Texture texture;
@@ -176,6 +188,11 @@ int main(int argc, char* argv[]){
 	sprite.setTexture(t.getTexture());
 	t.clear();
 	t.draw(sBackground);
+	
+	Font font;
+	font.loadFromFile("Sansation_Regular.ttf");
+	Text text("YOU WIN!", font, 35);
+	text.setPosition(WIDTH/2-80, 20);
 	
 	bool isPlaying = true;
 	
@@ -230,6 +247,8 @@ int main(int argc, char* argv[]){
 		}
 		
 		if(!isPlaying){
+			window.draw(text);
+			window.display();
 			continue;
 		}
 		
@@ -240,10 +259,12 @@ int main(int argc, char* argv[]){
 			
 			if(field[p1.posX][p1.posY] == USED){
 				// Player 2 wins
+				text.setFillColor(p2.color);
 				isPlaying = false;
 			}
 			if(field[p2.posX][p2.posY] == USED){
 				// Player 1 wins
+				text.setFillColor(p1.color);
 				isPlaying = false;
 			}
 
