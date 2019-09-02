@@ -11,6 +11,9 @@ Leonardo de Araujo Medeiros - 17/0038891
 3. Use o comando ```$ make``` para compilar o projeto;
 4. Use a o comando ```$ make run``` para executar a aplicação.
 
+## Ideia proposta
+O jogo possui um grafo implicito, no qual cada ponto da matriz é um nó e cada uma de suas quatro direções é uma aresta, e o jogador que visitar um nó que já foi visitado é dado como derrotado.
+
 ## Dependências
 - g++ compiler
 
